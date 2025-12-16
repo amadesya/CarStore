@@ -6,22 +6,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// Redis
 builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
     ConnectionMultiplexer.Connect("192.168.0.106:6379,password=1")
 );
 
-// MySQL (только регистраци€ строки подключени€, соединение открываетс€ в сервисе)
 builder.Services.AddScoped(_ =>
     new MySqlConnection("Server=localhost;Port=3306;Database=carstore;User=root;Password=root;")
 );
 
-// CarService
 builder.Services.AddScoped<CarService>();
 
 var app = builder.Build();
 
-// »нициализаци€ данных в Redis
 using (var scope = app.Services.CreateScope())
 {
     var redis = scope.ServiceProvider.GetRequiredService<IConnectionMultiplexer>();

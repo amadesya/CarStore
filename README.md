@@ -17,11 +17,14 @@ systemctl restart redis
 
 4. Теперь можно подключаться к нашей БД в коде
 
-# Настройка Redis
-Подключение Redis в C#
+# Подключение Redis в C#
 ```
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     //ConnectionMultiplexer.Connect("10.9.1.56,password=Password")
     ConnectionMultiplexer.Connect("192.168.0.106:6379,password=1")
 );
 ```
+
+# Как выглядит приложение
+<img width="1199" height="885" alt="image" src="https://github.com/user-attachments/assets/a68e0514-1781-4ac2-812e-70ec9aa08ed4" />
+

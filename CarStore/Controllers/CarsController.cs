@@ -1,35 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StackExchange.Redis;
-using CarShopRedis.Models;
-
-namespace CarShopRedis.Controllers;
+namespace CarStore.Services;
 
 public class CarsController : Controller
 {
-    private readonly IDatabase _db;
+    private readonly CarService service;
 
-    public CarsController(IConnectionMultiplexer redis)
+    public CarsController(CarService service)
     {
-        _db = redis.GetDatabase();
+        this.service = service;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var cars = new List<Car>();
-
-        for (int i = 1; i <= 5; i++)
-        {
-            var data = _db.HashGetAll($"car:{i}");
-            cars.Add(new Car
-            {
-                Id = i,
-                Brand = data.First(x => x.Name == "Brand").Value,
-                Model = data.First(x => x.Name == "Model").Value,
-                Year = int.Parse(data.First(x => x.Name == "Year").Value),
-                Price = int.Parse(data.First(x => x.Name == "Price").Value)
-            });
-        }
-
-        return View(cars);
+        return View(await service.GetCarsAsync());
     }
 }
